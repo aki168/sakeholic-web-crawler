@@ -11,6 +11,7 @@ from bs4 import BeautifulSoup
 app = FastAPI()
 origins = [
     "https://aki168.github.io/sakeholic/",
+    "https://aki168.github.io",
     "http://localhost",
     "http://localhost:3000",
 ]
