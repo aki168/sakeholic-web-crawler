@@ -40,7 +40,7 @@ async def hello():
 
 class Item(BaseModel):
     name: str
-    brewery: str | None = None
+    brewery: str 
 
 @app.post('/get_sake_images')
 async def get_img_from_google(item: Item):
