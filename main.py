@@ -3,11 +3,25 @@ from fastapi import FastAPI, __version__
 from fastapi.staticfiles import StaticFiles
 from fastapi.responses import HTMLResponse
 from pydantic import BaseModel
+from fastapi.middleware.cors import CORSMiddleware
 
 import requests
 from bs4 import BeautifulSoup
 
 app = FastAPI()
+origins = [
+    "https://aki168.github.io/sakeholic/",
+    "http://localhost",
+    "http://localhost:3000",
+]
+
+app.add_middleware(
+    CORSMiddleware,
+    allow_origins=origins,
+    allow_credentials=True,
+    allow_methods=["*"],
+    allow_headers=["*"],
+)
 app.mount("/static", StaticFiles(directory="static"), name="static")
 
 html = f"""
@@ -52,4 +66,4 @@ async def get_img_from_google(item: Item):
     for i in pics:
         if "images?" in i['src'] :
             image_path.append(i['src'])
-    return {'res': image_path[:2], 'version': __version__, "time": time()}
+    return {'res': image_path[:4], 'version': __version__, "time": time()}
