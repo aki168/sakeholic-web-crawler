@@ -29,33 +29,38 @@ html = f"""
 <!DOCTYPE html>
 <html>
     <head>
+        <script src="https://cdn.tailwindcss.com"></script>
         <title>FastAPI on Vercel</title>
         <link rel="icon" href="/static/favicon.ico" type="image/x-icon" />
     </head>
     <body>
-        <div class="bg-gray-200 p-4 rounded-lg shadow-lg">
-            <h1>Hello from FastAPI@{__version__}</h1>
+    <main class="container mx-auto divide-y divide-gray-400 divide-dotted py-5">
+        <div class="bg-gray-200 p-4 rounded-lg shadow-lg h-80">
+            <h1 class="font-light text-3xl align-middle mb-2">SAKEHOLIC API DOC</h1>
             <ul>
-                <li><a href="/docs">/docs</a></li>
-                <li><a href="/redoc">/redoc</a></li>
+                <li><a class="text-red-900 hover:text-red-700 font-bold" href="/docs">/docs</a></li>
+                <li><a class="text-red-900 hover:text-red-700 font-bold" href="/redoc">/redoc</a></li>
             </ul>
-            <p>Powered by <a href="https://vercel.com" target="_blank">Vercel</a></p>
         </div>
+    </main>
     </body>
 </html>
 """
+
 
 @app.get("/")
 async def root():
     return HTMLResponse(html)
 
-@app.get('/ping')
-async def hello():
-    return {'res': 'pong', 'version': __version__, "time": time()}
+
+# @app.get('/ping')
+# async def hello():
+#     return {'res': 'pong', 'version': __version__, "time": time()}
+
 
 class Item(BaseModel):
     name: str
-    brewery: str 
+    brewery: str
 
 @app.post('/get_sake_images')
 async def get_img_from_google(item: Item):
@@ -65,6 +70,15 @@ async def get_img_from_google(item: Item):
     pics = soup.find_all("img")
     image_path = []
     for i in pics:
-        if "images?" in i['src'] :
+        if "images?" in i['src']:
             image_path.append(i['src'])
     return {'res': image_path[:4], 'version': __version__, "time": time()}
+
+# @app.post('/get_brewery_info')
+# async def get_info_from_google(item:Item):
+#     keyword = item.name+ " " +item.brewery
+#     web = requests.get("https://www.google.com/search?q={}&gl=jp&hl=ja".format(keyword))
+#     soup = BeautifulSoup(web.text, "html.parser")
+#     headings = soup.find_all("h3")
+#     for title in headings:
+#         print(title+"\n")
