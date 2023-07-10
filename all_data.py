@@ -42,8 +42,9 @@ merged_df = pd.merge(brands_df, breweries_df)
 merged_df = pd.merge(merged_df, area_df)
 merged_df = pd.merge(merged_df, brand_tags_df, how='left')
 merged_df = pd.merge(merged_df, flavor_charts_df, how='left')
-print(merged_df)
-
+result_df = merged_df.drop("breweryId", axis=1).drop("areaId", axis=1)
+result = result_df.to_json(path_or_buf="./records.json", orient="records")
+print(result)
 # flavor_tags = get_flavor_tags.json()['tags']
 # print(flavor_tags[0], end="\n\n")
 # rank = get_ranking.json()
