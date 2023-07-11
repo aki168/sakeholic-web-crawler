@@ -10,8 +10,8 @@ get_breweries = requests.get(
     "https://raw.githubusercontent.com/aki168/sakeData/main/breweries.json")
 get_flavor_charts = requests.get(
     "https://raw.githubusercontent.com/aki168/sakeData/main/flavor-charts.json")
-# get_flavor_tags = requests.get(
-#     "https://raw.githubusercontent.com/aki168/sakeData/main/flavor-tags.json")
+get_flavor_tags = requests.get(
+    "https://raw.githubusercontent.com/aki168/sakeData/main/flavor-tags.json")
 # get_ranking = requests.get(
 #     "https://raw.githubusercontent.com/aki168/sakeData/main/rankings.json")
 
@@ -26,6 +26,11 @@ breweries = get_breweries.json()['breweries']
 # print(breweries, end="\n\n")
 flavor_charts = get_flavor_charts.json()['flavorCharts']
 # print(flavor_charts[0], end="\n\n")
+flavor_tags = get_flavor_tags.json()['tags']
+flavor_dict = {}
+for item in flavor_tags:
+    flavor_dict[item['id']] = item['tag']
+# print(flavor_dict, end="\n\n")
 
 ## trans to DataFrame
 brands_df = pd.DataFrame(brands)
@@ -37,7 +42,8 @@ flavor_charts_df = pd.DataFrame(flavor_charts)
 ## rename for merge
 breweries_df.rename(columns={'name': 'brewery_name', 'id': 'breweryId'}, inplace=True)
 area_df.rename(columns={'id':'areaId', 'name':'area'}, inplace=True)
-brand_tags_df.rename(columns={'brandId':'id'}, inplace=True)
+brand_tags_df.rename(columns={'brandId':'id','tagIds':'tags'}, inplace=True)
+brand_tags_df['tags'] = brand_tags_df['tags'].apply(lambda x:[flavor_dict[i] for i in x])
 flavor_charts_df.rename(columns={'brandId':'id'}, inplace=True)
 
 ## merge data
@@ -47,7 +53,7 @@ merged_df = pd.merge(merged_df, brand_tags_df, how='left')
 merged_df = pd.merge(merged_df, flavor_charts_df, how='left')
 result_df = merged_df.drop("breweryId", axis=1).drop("areaId", axis=1)
 
-## example: export json
+# example: export json
 result = result_df.to_json(path_or_buf="./records.json", orient="records", force_ascii=False)
 
 
