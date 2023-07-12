@@ -27,4 +27,4 @@ def find_similar_sake(sake_id):
 recommendations = {}
 for sid in data_df['id']:
     recommendations[sid] = find_similar_sake(sid)
-export_json = pd.DataFrame(recommendations).to_json(path_or_buf="./export_data/recommendations.json", force_ascii=False)
+export_json = pd.DataFrame(recommendations).to_json(path_or_buf="./export_data/recommendations.json", force_ascii=False, orient="records")
