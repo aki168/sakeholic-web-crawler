@@ -58,7 +58,7 @@ result_df = merged_df.drop("breweryId", axis=1).drop("areaId", axis=1)
 
 # example: export json
 result = result_df.to_json(
-    path_or_buf="./records.json", orient="records", force_ascii=False)
+    path_or_buf="./export_data/records.json", orient="records", force_ascii=False)
 
 
 # get ranking
@@ -73,7 +73,7 @@ rank_df = pd.DataFrame(rank)
 rank_df.rename(columns={'brandId': 'id'}, inplace=True)
 merged_rank_df = pd.merge(rank_df, result_df, how='left')
 rank_result = merged_rank_df.to_json(
-    path_or_buf="./rank.json", orient="records", force_ascii=False)
+    path_or_buf="./export_data/rank.json", orient="records", force_ascii=False)
 
 
 # # get ranking - areas

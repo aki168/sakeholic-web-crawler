@@ -3,7 +3,10 @@ from fastapi import FastAPI, __version__
 from fastapi.staticfiles import StaticFiles
 from fastapi.responses import HTMLResponse
 from pydantic import BaseModel
+from fastapi.encoders import jsonable_encoder
+from fastapi.responses import JSONResponse
 from fastapi.middleware.cors import CORSMiddleware
+from recommendation_system import find_similar_sake
 
 import requests
 from bs4 import BeautifulSoup
@@ -52,15 +55,12 @@ html = f"""
 async def root():
     return HTMLResponse(html)
 
-
-# @app.get('/ping')
-# async def hello():
-#     return {'res': 'pong', 'version': __version__, "time": time()}
-
-
 class Item(BaseModel):
     name: str
     brewery: str
+
+class Sake(BaseModel):
+    sid: str
 
 @app.post('/get_sake_images')
 async def get_img_from_google(item: Item):
@@ -73,6 +73,14 @@ async def get_img_from_google(item: Item):
         if "images?" in i['src']:
             image_path.append(i['src'])
     return {'res': image_path[:4], 'version': __version__, "time": time()}
+
+@app.post('/get_similar_sake')
+async def get_similar_sake(sake:Sake):
+    result = find_similar_sake(sake.sid)
+    if result:
+        return {'res': jsonable_encoder(result), 'version': __version__, "time": time()}
+    else:
+        return {'res': None, 'version': __version__, "time": time()}
 
 # @app.post('/get_brewery_info')
 # async def get_info_from_google(item:Item):
