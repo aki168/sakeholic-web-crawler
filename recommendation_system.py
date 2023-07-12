@@ -1,13 +1,14 @@
 import pandas as pd
 import numpy as np
 from sklearn.metrics.pairwise import cosine_similarity
+import json
+
+data = pd.read_json(path_or_buf="./export_data/records.json")
+data_df = pd.DataFrame(data)
+data_df = data_df.dropna(subset=['f1', 'f2', 'f3', 'f4', 'f5', 'f6'])
+data_df = data_df[['id', 'name', 'brewery_name','area', 'f1', 'f2', 'f3', 'f4', 'f5', 'f6']]
 
 def find_similar_sake(sake_id):
-    data = pd.read_json(path_or_buf="./export_data/records.json")
-    data_df = pd.DataFrame(data)
-    data_df = data_df.dropna(subset=['f1', 'f2', 'f3', 'f4', 'f5', 'f6'])
-    data_df = data_df[['id', 'name', 'brewery_name',
-                    'area', 'f1', 'f2', 'f3', 'f4', 'f5', 'f6']]
     # target:
     target_sake = data_df.query(f"id=={sake_id}")
 
@@ -22,3 +23,8 @@ def find_similar_sake(sake_id):
         return top_similar_data
     else:
         return None
+
+recommendations = {}
+for sid in data_df['id']:
+    recommendations[sid] = find_similar_sake(sid)
+export_json = pd.DataFrame(recommendations).to_json(path_or_buf="./export_data/recommendations.json", force_ascii=False)
