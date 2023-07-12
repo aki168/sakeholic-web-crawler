@@ -2,7 +2,6 @@ import pandas as pd
 import numpy as np
 from sklearn.metrics.pairwise import cosine_similarity
 
-
 def find_similar_sake(sake_id):
     data = pd.read_json(path_or_buf="./export_data/records.json")
     data_df = pd.DataFrame(data)

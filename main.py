@@ -4,7 +4,6 @@ from fastapi.staticfiles import StaticFiles
 from fastapi.responses import HTMLResponse
 from pydantic import BaseModel
 from fastapi.encoders import jsonable_encoder
-from fastapi.responses import JSONResponse
 from fastapi.middleware.cors import CORSMiddleware
 from recommendation_system import find_similar_sake
 

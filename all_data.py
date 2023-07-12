@@ -1,6 +1,5 @@
 import requests
 import pandas as pd
-import numpy as np
 
 get_area = requests.get(
     "https://raw.githubusercontent.com/aki168/sakeData/main/areas.json")
